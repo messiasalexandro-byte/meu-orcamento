@@ -4,6 +4,10 @@ Aplicativo web de controle de orçamento pessoal. Registre receitas e despesas p
 
 Tudo roda no navegador: não há servidor, cadastro ou login, e os dados ficam salvos no próprio aparelho.
 
+**Acesse online:** <https://messiasalexandro-byte.github.io/meu-orcamento/>
+
+O site é publicado automaticamente no GitHub Pages a cada push na branch `main` (veja `.github/workflows/deploy.yml`).
+
 ## Funcionalidades
 
 - **Receitas e despesas** com descrição, valor, categoria e data.

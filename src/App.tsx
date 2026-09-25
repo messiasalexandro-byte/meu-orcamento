@@ -73,32 +73,38 @@ export default function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>Meu Orçamento</h1>
+        <div>
+          <h1>Meu Orçamento</h1>
+          <p className="header-subtitle">Registre receitas e despesas e acompanhe seu saldo.</p>
+        </div>
         <MonthFilter months={months} value={month} onChange={setMonth} />
       </header>
 
-      <SummaryCards income={income} expenses={expenses} />
+      <main className="app-main">
+        <SummaryCards income={income} expenses={expenses} />
 
-      <BudgetProgress
-        key={month}
-        month={month}
-        budget={budgets[month]}
-        spent={expenses}
-        onSave={(amount) => setBudget(month, amount)}
-      />
+        <BudgetProgress
+          key={month}
+          month={month}
+          budget={budgets[month]}
+          spent={expenses}
+          onSave={(amount) => setBudget(month, amount)}
+        />
 
-      <div className="grid">
-        <TransactionForm today={today} onAdd={addTransaction} />
-        <CategoryChart transactions={filtered} />
-      </div>
+        <div className="grid">
+          <TransactionForm today={today} onAdd={addTransaction} />
+          <CategoryChart transactions={filtered} />
+        </div>
 
-      <TransactionList transactions={filtered} onRemove={handleRemove} />
+        <TransactionList transactions={filtered} onRemove={handleRemove} />
+      </main>
 
       {removed && (
         <UndoToast
           key={removed.transaction.id}
+          prefix="Transação"
           subject={removed.transaction.description}
-          message="foi excluída."
+          message="excluída."
           onUndo={handleUndo}
           onDismiss={() => setRemoved(null)}
         />

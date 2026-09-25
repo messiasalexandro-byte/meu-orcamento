@@ -19,10 +19,25 @@ export function TransactionList({ transactions, onRemove }: Props) {
     .sort((a, b) => b.t.date.localeCompare(a.t.date) || b.index - a.index)
     .map(({ t }) => t);
 
+  const emptyMessage =
+    transactions.length === 0
+      ? 'Nenhuma transação neste período. Use “Nova transação” para registrar a primeira.'
+      : filter === 'receita'
+        ? 'Nenhuma receita neste período.'
+        : 'Nenhuma despesa neste período.';
+
   return (
     <section className="card">
       <div className="list-header">
-        <h2>Transações</h2>
+        <h2>
+          Transações
+          <span className="count" aria-hidden="true">
+            {visible.length}
+          </span>
+          <span className="sr-only">
+            ({visible.length} {visible.length === 1 ? 'item' : 'itens'})
+          </span>
+        </h2>
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value as Filter)}
@@ -35,7 +50,7 @@ export function TransactionList({ transactions, onRemove }: Props) {
       </div>
 
       {visible.length === 0 ? (
-        <p className="empty">Nenhuma transação encontrada.</p>
+        <p className="empty">{emptyMessage}</p>
       ) : (
         <ul className="list">
           {visible.map((t) => (
@@ -50,12 +65,13 @@ export function TransactionList({ transactions, onRemove }: Props) {
                 {t.type === 'receita' ? '+' : '−'} {formatCurrency(t.amount)}
               </span>
               <button
+                type="button"
                 className="remove"
                 onClick={() => onRemove(t.id)}
                 aria-label={`Excluir ${t.description}`}
-                title="Excluir"
+                title="Excluir transação"
               >
-                ×
+                <span aria-hidden="true">×</span>
               </button>
             </li>
           ))}

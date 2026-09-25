@@ -51,17 +51,23 @@ export function BudgetProgress({ month, budget, spent, onSave }: Props) {
     return (
       <section className="card budget">
         <h2>{title}</h2>
-        <form className="budget-form" onSubmit={handleSubmit}>
+        <form className="budget-form" onSubmit={handleSubmit} noValidate>
           <input
             autoFocus
             inputMode="decimal"
+            autoComplete="off"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Limite em R$"
+            onChange={(e) => {
+              setInput(e.target.value);
+              setError('');
+            }}
+            placeholder="Limite em R$, ex.: 2.000,00"
             aria-label="Limite do orçamento em reais"
+            aria-invalid={error ? true : undefined}
+            aria-describedby={error ? 'budget-error' : undefined}
           />
           <button type="submit" className="primary">
-            Salvar
+            Salvar limite
           </button>
           <button type="button" className="secondary" onClick={() => setEditing(false)}>
             Cancelar
@@ -73,7 +79,7 @@ export function BudgetProgress({ month, budget, spent, onSave }: Props) {
           )}
         </form>
         {error && (
-          <p className="form-error" role="alert">
+          <p id="budget-error" className="form-error" role="alert">
             {error}
           </p>
         )}
@@ -86,9 +92,11 @@ export function BudgetProgress({ month, budget, spent, onSave }: Props) {
       <section className="card budget">
         <h2>{title}</h2>
         <div className="budget-empty">
-          <p className="budget-hint">Nenhum limite definido para este mês.</p>
-          <button className="primary" onClick={startEditing}>
-            Definir orçamento
+          <p className="budget-hint">
+            Nenhum limite definido. Defina quanto pretende gastar para acompanhar o mês.
+          </p>
+          <button type="button" className="primary" onClick={startEditing}>
+            Definir limite
           </button>
         </div>
       </section>
@@ -99,13 +107,15 @@ export function BudgetProgress({ month, budget, spent, onSave }: Props) {
   const remaining = roundCents(budget - spent);
   const over = remaining < 0;
   const percentLabel = (ratio * 100).toFixed(0) + '%';
+  // Só visual: destaca em âmbar quando o gasto chega a 80% do limite.
+  const status = over ? 'over' : ratio >= 0.8 ? 'warning' : '';
 
   return (
-    <section className={`card budget ${over ? 'over' : ''}`}>
+    <section className={`card budget ${status}`}>
       <div className="budget-header">
         <h2>{title}</h2>
-        <button className="secondary" onClick={startEditing}>
-          Editar
+        <button type="button" className="secondary" onClick={startEditing}>
+          Editar limite
         </button>
       </div>
 
@@ -113,7 +123,7 @@ export function BudgetProgress({ month, budget, spent, onSave }: Props) {
         <span>
           <strong>{formatCurrency(spent)}</strong> de {formatCurrency(budget)}
         </span>
-        <span className={over ? 'negative' : ''}>{percentLabel}</span>
+        <span className="budget-percent">{percentLabel}</span>
       </div>
 
       <div

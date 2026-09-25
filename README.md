@@ -12,15 +12,17 @@ O site é publicado automaticamente no GitHub Pages a cada push na branch `main`
 
 - **Receitas e despesas** com descrição, valor, categoria e data.
 - **Painel do mês** com total de receitas, total de despesas e saldo (verde quando positivo, vermelho quando negativo).
-- **Gráfico de gastos por categoria** (rosca), com valor e percentual de cada categoria.
-- **Orçamento mensal**: defina um limite de gastos por mês e acompanhe quanto já foi usado e quanto resta.
+- **Gráfico de gastos por categoria** (rosca), com o total gasto no centro e o valor e o percentual de cada categoria.
+- **Orçamento mensal**: defina um limite de gastos por mês e acompanhe quanto já foi usado e quanto resta. A barra fica âmbar a partir de 80% do limite e vermelha quando ele é ultrapassado.
+- **Formulário com validação amigável**: o erro aparece logo abaixo do campo com problema, e uma confirmação ("Despesa adicionada.") aparece depois de cada lançamento.
 - **Filtro por mês** (ou "Todos os meses") e filtro da lista por tipo.
 - **Desfazer exclusão**: ao excluir uma transação, um aviso permite desfazer por alguns segundos.
 - **Sincronização entre abas**: o que é feito em uma aba aparece nas outras abertas no mesmo navegador.
 - **Virada do dia e do mês**: com o app aberto, a data padrão e o mês atual se atualizam sozinhos.
 - **Valores no formato brasileiro**: aceita `1500`, `1.500`, `1500,50` e `1.500,50`.
 - **Tema claro e escuro**, conforme a configuração do sistema.
-- **Layout responsivo**: funciona no computador e no celular.
+- **Layout responsivo**: funciona de 320px até telas largas, com botões e campos de pelo menos 44px no celular.
+- **Acessibilidade**: foco visível, rótulos ligados aos campos, botões com `aria-label` e respeito à preferência de reduzir movimento do sistema.
 
 ### Categorias
 
@@ -47,7 +49,7 @@ npm install
 npm run dev
 ```
 
-Depois, abra <http://localhost:5173> no navegador.
+Depois, abra <http://localhost:5173/meu-orcamento/> no navegador.
 
 ### Abrir no celular
 
@@ -57,7 +59,7 @@ Com o computador e o celular na mesma rede Wi-Fi:
 npx vite --host
 ```
 
-O terminal mostra um endereço **Network** (por exemplo, `http://192.168.0.10:5173`). Abra esse endereço no navegador do celular. Se não carregar, verifique se o firewall do Windows permite o Node.js na rede atual.
+O terminal mostra um endereço **Network** (por exemplo, `http://192.168.0.10:5173/meu-orcamento/`). Abra esse endereço no navegador do celular. Se não carregar, verifique se o firewall do Windows permite o Node.js na rede atual.
 
 ### Outros comandos
 
@@ -90,7 +92,7 @@ src/
   App.tsx                   # Layout e estado principal
   types.ts                  # Tipo Transaction
   categories.ts             # Categorias e cores
-  index.css                 # Estilos e temas claro/escuro
+  index.css                 # Estilos, variáveis de design e temas claro/escuro
   hooks/
     useTransactions.ts      # Transações + localStorage + sincronização entre abas
     useBudgets.ts           # Limites mensais + localStorage
@@ -106,3 +108,9 @@ src/
     MonthFilter.tsx         # Seletor de mês
     UndoToast.tsx           # Aviso com "Desfazer"
 ```
+
+## Design e revisão de UI/UX
+
+Todo o visual fica em `src/index.css`. Cores, espaçamentos (escala de 4/8px), tamanhos de texto, raios, sombras e durações de transição são variáveis CSS definidas em `:root`, com versões para o tema escuro. Para mudar a aparência do app, ajuste essas variáveis em vez de usar valores fixos nos componentes.
+
+O projeto inclui um agente do Claude Code em `.claude/agents/ui-ux-specialist.md`. Ele revisa o design visual, a experiência de uso e a responsividade, corrige o que encontrar e roda `npm run build` no final, sem alterar a lógica de dados.
